@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fatec Conecta — Gestão de Biblioteca</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --crimson: #8B1A1A;
+    --crimson-dark: #6B1212;
+    --crimson-light: #B22222;
+    --crimson-pale: #F5EDED;
+    --crimson-bg: #FDF8F8;
+    --slate: #1E2330;
+    --slate-mid: #2D3347;
+    --slate-light: #4A5568;
+    --gold: #C9973A;
+    --gold-light: #F0D080;
+    --white: #FFFFFF;
+    --gray-100: #F7F7F5;
+    --gray-200: #EBEBEA;
+    --gray-300: #D4D4D2;
+    --gray-400: #9E9E9B;
+    --gray-600: #5A5A57;
+    --green: #1A7A4A;
+    --green-bg: #E8F5EE;
+    --amber: #A05C10;
+    --amber-bg: #FEF3E2;
+    --font-display: 'DM Serif Display', Georgia, serif;
+    --font-body: 'DM Sans', system-ui, sans-serif;
+    --radius: 10px;
+    --radius-lg: 16px;
+    --shadow: 0 2px 16px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 40px rgba(0,0,0,0.14);
+  }
+
+  html, body {
+    height: 100%;
+    font-family: var(--font-body);
+    background: var(--gray-100);
+    color: var(--slate);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; min-height: 100vh; }
+  .screen.active { display: flex; }
+
+  /* ── SCREEN: LOGIN ── */
+  #screen-login {
+    background: linear-gradient(135deg, var(--slate) 0%, var(--slate-mid) 60%, #3A1A1A 100%);
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  #screen-login::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,151,58,0.12);
+    top: -200px; right: -150px;
+  }
+  #screen-login::after {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,151,58,0.08);
+    bottom: -150px; left: -100px;
+  }
+
+  .login-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 3rem 2.5rem;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    z-index: 1;
+  }
+  .login-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 2.5rem;
+  }
+  .login-logo-icon {
+    width: 46px; height: 46px;
+    background: var(--crimson);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 22px;
+  }
+  .login-logo-text h1 {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    color: var(--slate);
+    line-height: 1.1;
+  }
+  .login-logo-text span {
+    font-size: 0.78rem;
+    color: var(--gray-400);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .login-title {
+    font-family: var(--font-display);
+    font-size: 1.7rem;
+    color: var(--slate);
+    margin-bottom: 0.4rem;
+  }
+  .login-subtitle {
+    font-size: 0.88rem;
+    color: var(--gray-400);
+    margin-bottom: 2rem;
+  }
+  .form-group { margin-bottom: 1.2rem; }
+  .form-label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--gray-600);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .form-input {
+    width: 100%;
+    height: 46px;
+    padding: 0 1rem;
+    border: 1.5px solid var(--gray-300);
+    border-radius: var(--radius);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--slate);
+    background: var(--white);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+  .form-input:focus {
+    border-color: var(--crimson);
+    box-shadow: 0 0 0 3px rgba(139,26,26,0.1);
+  }
+  .btn-primary {
+    width: 100%;
+    height: 48px;
+    background: var(--crimson);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    margin-top: 0.5rem;
+  }
+  .btn-primary:hover { background: var(--crimson-dark); }
+  .btn-primary:active { transform: scale(0.98); }
+  .login-divider {
+    text-align: center;
+    margin: 1.5rem 0 1rem;
+    font-size: 0.78rem;
+    color: var(--gray-400);
+  }
+  .btn-secondary {
+    width: 100%;
+    height: 44px;
+    background: var(--crimson-pale);
+    color: var(--crimson);
+    border: 1.5px solid rgba(139,26,26,0.2);
+    border-radius: var(--radius);
+    font-family: var(--font-body);
+    font-size: 0.92rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-secondary:hover { background: #EEDADA; }
+
+  /* ── APP SHELL ── */
+  #screen-app {
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .topbar {
+    height: 58px;
+    background: var(--crimson);
+    display: flex;
+    align-items: center;
+    padding: 0 1.5rem;
+    gap: 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  }
+  .topbar-logo {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    color: white;
+    flex: 0 0 auto;
+    letter-spacing: 0.01em;
+  }
+  .topbar-logo span { opacity: 0.65; font-size: 0.75rem; font-family: var(--font-body); margin-left: 6px; }
+  .topbar-search {
+    flex: 1;
+    max-width: 500px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .topbar-search input {
+    width: 100%;
+    height: 34px;
+    padding: 0 1rem 0 2.4rem;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 20px;
+    color: white;
+    font-size: 0.88rem;
+    font-family: var(--font-body);
+    outline: none;
+    transition: background 0.2s;
+  }
+  .topbar-search input::placeholder { color: rgba(255,255,255,0.6); }
+  .topbar-search input:focus { background: rgba(255,255,255,0.22); }
+  .topbar-search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255,255,255,0.7);
+    font-size: 14px;
+    pointer-events: none;
+  }
+  .topbar-user {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+    font-size: 0.88rem;
+    margin-left: auto;
+    cursor: pointer;
+  }
+  .topbar-avatar {
+    width: 32px; height: 32px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.78rem;
+  }
+
+  .app-layout {
+    display: flex;
+    flex: 1;
+    min-height: calc(100vh - 58px);
+  }
+
+  .sidebar {
+    width: 220px;
+    background: var(--slate);
+    flex-shrink: 0;
+    padding: 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .sidebar-section {
+    padding: 0 1rem;
+    margin-bottom: 0.25rem;
+  }
+  .sidebar-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    padding: 0 0.75rem;
+    margin: 1rem 0 0.4rem;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0.6rem 0.75rem;
+    border-radius: 8px;
+    color: rgba(255,255,255,0.6);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-bottom: 2px;
+  }
+  .nav-item:hover { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.9); }
+  .nav-item.active { background: var(--crimson); color: white; }
+  .nav-item i { font-size: 17px; flex-shrink: 0; }
+  .sidebar-footer {
+    margin-top: auto;
+    padding: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .nav-logout {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0.6rem 0.75rem;
+    border-radius: 8px;
+    color: rgba(255,255,255,0.4);
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .nav-logout:hover { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.05); }
+
+  .main-content {
+    flex: 1;
+    padding: 2rem 2.5rem;
+    overflow-y: auto;
+    background: var(--gray-100);
+  }
+
+  /* ── VIEWS ── */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ── DASHBOARD ── */
+  .page-header { margin-bottom: 1.75rem; }
+  .page-header h2 {
+    font-family: var(--font-display);
+    font-size: 1.9rem;
+    color: var(--slate);
+    line-height: 1.1;
+  }
+  .page-header p { font-size: 0.9rem; color: var(--gray-400); margin-top: 4px; }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .stat-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 1.4rem 1.5rem;
+    border: 1px solid var(--gray-200);
+    box-shadow: var(--shadow);
+  }
+  .stat-card-label { font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--gray-400); margin-bottom: 0.5rem; }
+  .stat-card-value { font-family: var(--font-display); font-size: 2.2rem; color: var(--slate); line-height: 1; }
+  .stat-card-sub { font-size: 0.8rem; color: var(--gray-400); margin-top: 0.4rem; }
+  .stat-card-icon {
+    width: 36px; height: 36px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.8rem;
+    font-size: 18px;
+  }
+  .stat-card-icon.crimson { background: var(--crimson-pale); color: var(--crimson); }
+  .stat-card-icon.green { background: var(--green-bg); color: var(--green); }
+  .stat-card-icon.amber { background: var(--amber-bg); color: var(--amber); }
+  .stat-card-icon.slate { background: rgba(30,35,48,0.08); color: var(--slate); }
+
+  .alert-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0.85rem 1.2rem;
+    background: var(--amber-bg);
+    border: 1px solid rgba(160,92,16,0.2);
+    border-radius: var(--radius);
+    margin-bottom: 1.75rem;
+    font-size: 0.88rem;
+    color: var(--amber);
+  }
+  .alert-banner strong { font-weight: 600; }
+  .alert-banner i { font-size: 18px; flex-shrink: 0; }
+
+  /* ── LOANS TABLE ── */
+  .card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--gray-200);
+    box-shadow: var(--shadow);
+  }
+  .card-header {
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid var(--gray-200);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .card-header h3 {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    color: var(--slate);
+  }
+  .card-header .search-box {
+    flex: 1;
+    max-width: 280px;
+    position: relative;
+  }
+  .card-header .search-box input {
+    width: 100%;
+    height: 36px;
+    padding: 0 0.8rem 0 2.2rem;
+    border: 1px solid var(--gray-300);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-family: var(--font-body);
+    color: var(--slate);
+    outline: none;
+    background: var(--gray-100);
+  }
+  .card-header .search-box input:focus { border-color: var(--crimson); background: white; }
+  .card-header .search-box i { position: absolute; left: 8px; top: 50%; transform: translateY(-50%); font-size: 14px; color: var(--gray-400); }
+  .card-header-actions { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+
+  .filter-select {
+    height: 36px;
+    padding: 0 0.8rem;
+    border: 1px solid var(--gray-300);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-family: var(--font-body);
+    color: var(--slate);
+    background: var(--white);
+    cursor: pointer;
+    outline: none;
+  }
+  .btn-add {
+    height: 36px;
+    padding: 0 1rem;
+    background: var(--crimson);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+  .btn-add:hover { background: var(--crimson-dark); }
+
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    text-align: left;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--gray-400);
+    border-bottom: 1px solid var(--gray-200);
+    background: var(--gray-100);
+  }
+  td {
+    padding: 1rem 1.5rem;
+    font-size: 0.9rem;
+    color: var(--slate);
+    border-bottom: 1px solid var(--gray-200);
+    vertical-align: middle;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(0,0,0,0.012); }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .badge-atrasado { background: #FDEAEA; color: #A32D2D; }
+  .badge-ativo { background: #E6F0FB; color: #185FA5; }
+  .badge-devolvido { background: var(--green-bg); color: var(--green); }
+
+  .actions { display: flex; gap: 6px; }
+  .btn-action {
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid;
+    font-family: var(--font-body);
+    transition: all 0.15s;
+  }
+  .btn-devolver { border-color: var(--gray-300); color: var(--slate); background: white; }
+  .btn-devolver:hover { background: var(--gray-100); }
+  .btn-remover { border-color: rgba(163,45,45,0.3); color: var(--crimson); background: #FDF2F2; }
+  .btn-remover:hover { background: #FDEAEA; }
+
+  .table-footer {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.8rem;
+    color: var(--gray-400);
+    border-top: 1px solid var(--gray-200);
+  }
+
+  /* ── SCANNER / RFID ── */
+  #view-scanner .scanner-container {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .scanner-steps {
+    display: flex;
+    gap: 0;
+    margin-bottom: 2rem;
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--gray-200);
+    overflow: hidden;
+  }
+  .step {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 1rem 1.2rem;
+    font-size: 0.85rem;
+    color: var(--gray-400);
+    border-right: 1px solid var(--gray-200);
+    position: relative;
+    transition: all 0.3s;
+  }
+  .step:last-child { border-right: none; }
+  .step.done { color: var(--green); }
+  .step.active { color: var(--crimson); background: var(--crimson-pale); font-weight: 600; }
+  .step-num {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    background: var(--gray-200);
+    color: var(--gray-400);
+  }
+  .step.active .step-num { background: var(--crimson); color: white; }
+  .step.done .step-num { background: var(--green); color: white; }
+
+  .scanner-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--gray-200);
+    box-shadow: var(--shadow);
+    padding: 2rem;
+    margin-bottom: 1.2rem;
+  }
+  .scanner-area {
+    width: 100%;
+    height: 220px;
+    border: 2px dashed var(--gray-300);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background: var(--gray-100);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .scanner-area:hover { border-color: var(--crimson); background: var(--crimson-pale); }
+  .scanner-area.scanning { border-color: var(--crimson); background: var(--crimson-pale); }
+  .scanner-area.success { border-color: var(--green); background: var(--green-bg); }
+  .scanner-icon { font-size: 48px; color: var(--gray-300); transition: color 0.3s; }
+  .scanner-area.scanning .scanner-icon { color: var(--crimson); }
+  .scanner-area.success .scanner-icon { color: var(--green); }
+  .scanner-text { font-size: 0.95rem; color: var(--gray-400); text-align: center; transition: color 0.3s; }
+  .scanner-area.scanning .scanner-text { color: var(--crimson); }
+  .scanner-area.success .scanner-text { color: var(--green); }
+
+  .scan-bar {
+    position: absolute;
+    left: 0; right: 0;
+    height: 3px;
+    background: var(--crimson);
+    top: 30%;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .scanner-area.scanning .scan-bar { opacity: 1; animation: scanMove 1.5s ease-in-out infinite; }
+  @keyframes scanMove { 0% { top: 20%; } 50% { top: 80%; } 100% { top: 20%; } }
+
+  .book-result {
+    display: none;
+    background: var(--gray-100);
+    border-radius: var(--radius);
+    padding: 1.2rem;
+    margin-top: 1.2rem;
+    border: 1px solid var(--gray-200);
+  }
+  .book-result.show { display: flex; gap: 1rem; align-items: flex-start; }
+  .book-cover {
+    width: 54px; height: 72px;
+    background: var(--crimson);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .book-info h4 { font-size: 1rem; font-weight: 600; color: var(--slate); margin-bottom: 4px; }
+  .book-info p { font-size: 0.82rem; color: var(--gray-400); margin-bottom: 2px; }
+  .book-info .rfid-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #E6F0FB;
+    color: #185FA5;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    margin-top: 6px;
+  }
+
+  .return-info {
+    display: none;
+    background: var(--green-bg);
+    border: 1px solid rgba(26,122,74,0.2);
+    border-radius: var(--radius);
+    padding: 1.2rem 1.5rem;
+    margin-top: 1.2rem;
+  }
+  .return-info.show { display: flex; align-items: center; gap: 1rem; }
+  .return-info i { font-size: 24px; color: var(--green); flex-shrink: 0; }
+  .return-info h4 { font-size: 0.92rem; font-weight: 600; color: var(--green); }
+  .return-info p { font-size: 0.85rem; color: #2E7A52; margin-top: 2px; }
+
+  .scanner-btn-row { display: flex; gap: 10px; margin-top: 1.5rem; }
+  .btn-scan {
+    flex: 1;
+    height: 46px;
+    background: var(--crimson);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn-scan:hover { background: var(--crimson-dark); }
+  .btn-scan:disabled { background: var(--gray-300); cursor: not-allowed; }
+  .btn-outline-scan {
+    height: 46px;
+    padding: 0 1.5rem;
+    background: var(--white);
+    color: var(--slate);
+    border: 1.5px solid var(--gray-300);
+    border-radius: var(--radius);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-outline-scan:hover { border-color: var(--gray-400); background: var(--gray-100); }
+
+  /* ── CATALOG ── */
+  .catalog-toolbar {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .catalog-search {
+    flex: 1;
+    min-width: 220px;
+    position: relative;
+  }
+  .catalog-search input {
+    width: 100%;
+    height: 42px;
+    padding: 0 1rem 0 2.6rem;
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+    font-family: var(--font-body);
+    background: var(--white);
+    color: var(--slate);
+    outline: none;
+    box-shadow: var(--shadow);
+  }
+  .catalog-search input:focus { border-color: var(--crimson); }
+  .catalog-search i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 16px; color: var(--gray-400); }
+  .filter-chips {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .chip {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1.5px solid var(--gray-200);
+    background: var(--white);
+    color: var(--gray-600);
+    transition: all 0.15s;
+    box-shadow: var(--shadow);
+  }
+  .chip:hover { border-color: var(--crimson); color: var(--crimson); }
+  .chip.active { background: var(--crimson); border-color: var(--crimson); color: white; }
+
+  .books-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.2rem;
+  }
+  .book-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--gray-200);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .book-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+  .book-card-cover {
+    height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    position: relative;
+  }
+  .book-card-body { padding: 1rem; }
+  .book-card-title { font-weight: 600; font-size: 0.9rem; color: var(--slate); line-height: 1.3; margin-bottom: 4px; }
+  .book-card-author { font-size: 0.78rem; color: var(--gray-400); margin-bottom: 8px; }
+  .book-card-footer { display: flex; align-items: center; justify-content: space-between; }
+  .avail-badge {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 5px;
+  }
+  .avail-yes { background: var(--green-bg); color: var(--green); }
+  .avail-no { background: #FDEAEA; color: #A32D2D; }
+
+  .book-card-category {
+    font-size: 0.7rem;
+    color: var(--gray-400);
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    width: 100%;
+    max-width: 460px;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    animation: modalIn 0.2s ease-out;
+  }
+  @keyframes modalIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+  .modal-close {
+    position: absolute;
+    top: 1rem; right: 1rem;
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: var(--gray-400);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+  }
+  .modal-close:hover { color: var(--slate); background: var(--gray-100); }
+  .modal h3 { font-family: var(--font-display); font-size: 1.3rem; margin-bottom: 1.5rem; }
+
+  /* ── STUDENT MY LOANS ── */
+  .loan-timeline { display: flex; flex-direction: column; gap: 12px; }
+  .loan-item {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--gray-200);
+    padding: 1.2rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    box-shadow: var(--shadow);
+  }
+  .loan-item-icon {
+    width: 46px; height: 46px;
+    border-radius: 12px;
+    background: var(--crimson-pale);
+    color: var(--crimson);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .loan-item-body { flex: 1; }
+  .loan-item-body h4 { font-weight: 600; font-size: 0.95rem; color: var(--slate); }
+  .loan-item-body p { font-size: 0.82rem; color: var(--gray-400); margin-top: 2px; }
+  .loan-item-due { text-align: right; flex-shrink: 0; }
+  .loan-item-due .due-label { font-size: 0.72rem; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.04em; }
+  .loan-item-due .due-date { font-family: var(--font-display); font-size: 1.1rem; color: var(--slate); }
+  .loan-item-due.overdue .due-date { color: var(--crimson); }
+  .loan-item-due.overdue .due-label { color: var(--crimson); }
+
+  /* Toast notification */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--slate);
+    color: white;
+    padding: 0.85rem 1.5rem;
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+    box-shadow: var(--shadow-lg);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.3s;
+  }
+  .toast.show { transform: none; opacity: 1; }
+  .toast.success { background: var(--green); }
+  .toast.error { background: #A32D2D; }
+
+  /* ── Animations ── */
+  @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+  .loading-dot { animation: pulse 1.2s ease-in-out infinite; }
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+</head>
+<body>
+
+<!-- ════════════════ LOGIN ════════════════ -->
+<div class="screen active" id="screen-login">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logo-icon"><i class="ti ti-book-2"></i></div>
+      <div class="login-logo-text">
+        <h1>Fatec Conecta</h1>
+        <span>Gestão de Biblioteca</span>
+      </div>
+    </div>
+    <h2 class="login-title">Bem-vindo de volta</h2>
+    <p class="login-subtitle">Acesse com seu email estudantil</p>
+    <div class="form-group">
+      <label class="form-label">Email Estudantil</label>
+      <input type="email" class="form-input" id="input-email" placeholder="ra123456@fatec.sp.gov.br" value="ana.pereira@fatec.sp.gov.br">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Senha</label>
+      <input type="password" class="form-input" id="input-password" placeholder="••••••••" value="senha123">
+    </div>
+    <button class="btn-primary" onclick="doLogin()">Entrar na Biblioteca</button>
+    <div class="login-divider">ou</div>
+    <button class="btn-secondary" onclick="doLogin()"><i class="ti ti-qrcode"></i> Entrar com QR Code do RA</button>
+  </div>
+</div>
+
+<!-- ════════════════ APP ════════════════ -->
+<div class="screen" id="screen-app">
+  <div style="display: flex; flex-direction: column; width: 100%; min-height: 100vh;">
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="topbar-logo">Fatec Conecta <span>Gestão de Biblioteca</span></div>
+      <div class="topbar-search">
+        <i class="ti ti-search topbar-search-icon"></i>
+        <input type="text" placeholder="Buscar por matrícula, livro ou autor..." id="topbar-search-input" oninput="globalSearch(this.value)">
+      </div>
+      <div class="topbar-user" onclick="showView('meus-emprestimos')">
+        <div class="topbar-avatar">AP</div>
+        <span>Ana Pereira</span>
+      </div>
+    </div>
+
+    <div class="app-layout">
+      <!-- Sidebar -->
+      <nav class="sidebar">
+        <div class="sidebar-section">
+          <div class="sidebar-label">Principal</div>
+          <div class="nav-item active" id="nav-dashboard" onclick="showView('dashboard')">
+            <i class="ti ti-layout-dashboard"></i> Dashboard
+          </div>
+          <div class="nav-item" id="nav-emprestimos" onclick="showView('emprestimos')">
+            <i class="ti ti-books"></i> Empréstimos
+          </div>
+          <div class="nav-item" id="nav-scanner" onclick="showView('scanner')">
+            <i class="ti ti-scan"></i> Scanner RFID
+          </div>
+        </div>
+        <div class="sidebar-section">
+          <div class="sidebar-label">Acervo</div>
+          <div class="nav-item" id="nav-catalogo" onclick="showView('catalogo')">
+            <i class="ti ti-building-library"></i> Catálogo
+          </div>
+        </div>
+        <div class="sidebar-section">
+          <div class="sidebar-label">Minha Conta</div>
+          <div class="nav-item" id="nav-meus-emprestimos" onclick="showView('meus-emprestimos')">
+            <i class="ti ti-clipboard-list"></i> Meus Empréstimos
+          </div>
+        </div>
+        <div class="sidebar-footer">
+          <div class="nav-logout" onclick="doLogout()">
+            <i class="ti ti-logout"></i> Sair
+          </div>
+        </div>
+      </nav>
+
+      <!-- Main -->
+      <main class="main-content">
+
+        <!-- ── DASHBOARD ── -->
+        <div class="view active" id="view-dashboard">
+          <div class="page-header">
+            <h2>Dashboard</h2>
+            <p>Visão geral da biblioteca — hoje, <span id="today-date"></span></p>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-card-icon crimson"><i class="ti ti-books"></i></div>
+              <div class="stat-card-label">Acervo Total</div>
+              <div class="stat-card-value">1.284</div>
+              <div class="stat-card-sub">+12 este mês</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-icon slate"><i class="ti ti-book-upload"></i></div>
+              <div class="stat-card-label">Em Empréstimo</div>
+              <div class="stat-card-value">347</div>
+              <div class="stat-card-sub">27% do acervo</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-icon amber"><i class="ti ti-alert-triangle"></i></div>
+              <div class="stat-card-label">Em Atraso</div>
+              <div class="stat-card-value">42</div>
+              <div class="stat-card-sub">Notificações enviadas</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-icon green"><i class="ti ti-users"></i></div>
+              <div class="stat-card-label">Alunos Ativos</div>
+              <div class="stat-card-value">892</div>
+              <div class="stat-card-sub">Este semestre</div>
+            </div>
+          </div>
+
+          <div class="alert-banner">
+            <i class="ti ti-alert-triangle"></i>
+            <span><strong>42 empréstimos em atraso.</strong> Notificações automáticas foram enviadas aos alunos.</span>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3>Empréstimos Recentes</h3>
+              <div class="card-header-actions">
+                <button class="btn-add" onclick="showView('scanner')"><i class="ti ti-scan"></i> Novo Empréstimo</button>
+              </div>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Aluno</th>
+                  <th>Livro</th>
+                  <th>Retirada</th>
+                  <th>Devolução Prevista</th>
+                  <th>Status</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="loans-table-body"></tbody>
+            </table>
+            <div class="table-footer">1–6 de 6 registros</div>
+          </div>
+        </div>
+
+        <!-- ── EMPRÉSTIMOS ── -->
+        <div class="view" id="view-emprestimos">
+          <div class="page-header">
+            <h2>Empréstimos</h2>
+            <p>Controle de retiradas, devoluções e atrasos.</p>
+          </div>
+          <div class="alert-banner">
+            <i class="ti ti-alert-triangle"></i>
+            <span><strong>42 empréstimos em atraso.</strong> Notificações automáticas foram enviadas aos alunos.</span>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <h3>Todos os Empréstimos</h3>
+              <div class="search-box">
+                <i class="ti ti-search"></i>
+                <input type="text" placeholder="Buscar aluno ou livro..." oninput="filterLoans(this.value)">
+              </div>
+              <div class="card-header-actions">
+                <select class="filter-select" onchange="filterByStatus(this.value)">
+                  <option value="">Todos os status</option>
+                  <option value="Atrasado">Atrasado</option>
+                  <option value="Ativo">Ativo</option>
+                  <option value="Devolvido">Devolvido</option>
+                </select>
+                <button class="btn-add" onclick="showView('scanner')"><i class="ti ti-plus"></i> Novo Empréstimo</button>
+              </div>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Aluno</th>
+                  <th>Livro</th>
+                  <th>Retirada</th>
+                  <th>Devolução Prevista</th>
+                  <th>Status</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="loans-table-body-2"></tbody>
+            </table>
+            <div class="table-footer" id="loans-count">1–6 de 6 registros</div>
+          </div>
+        </div>
+
+        <!-- ── SCANNER RFID ── -->
+        <div class="view" id="view-scanner">
+          <div class="page-header">
+            <h2>Scanner RFID</h2>
+            <p>Leia o chip do livro para registrar empréstimo ou devolução.</p>
+          </div>
+          <div class="scanner-container">
+            <div class="scanner-steps">
+              <div class="step active" id="step-1">
+                <div class="step-num">1</div>
+                <span>Escanear Livro</span>
+              </div>
+              <div class="step" id="step-2">
+                <div class="step-num">2</div>
+                <span>Vincular Aluno</span>
+              </div>
+              <div class="step" id="step-3">
+                <div class="step-num">3</div>
+                <span>Confirmar</span>
+              </div>
+            </div>
+
+            <!-- Step 1: Scanner -->
+            <div id="scanner-step-1">
+              <div class="scanner-card">
+                <div class="scanner-area" id="scanner-area" onclick="startScan()">
+                  <div class="scan-bar"></div>
+                  <i class="ti ti-scan scanner-icon" id="scanner-icon"></i>
+                  <div class="scanner-text" id="scanner-text">Clique para ativar o scanner RFID</div>
+                  <div style="font-size: 0.78rem; color: var(--gray-300); font-size: 0.75rem;" id="scanner-hint">ou aproxime o livro do leitor</div>
+                </div>
+                <div class="book-result" id="book-result">
+                  <div class="book-cover"><i class="ti ti-book"></i></div>
+                  <div class="book-info">
+                    <h4 id="book-result-title">—</h4>
+                    <p id="book-result-author">—</p>
+                    <p id="book-result-isbn" style="font-family:monospace; font-size:0.78rem;">—</p>
+                    <div class="rfid-tag"><i class="ti ti-wifi"></i> <span id="book-rfid">—</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="scanner-btn-row">
+                <button class="btn-scan" id="btn-step1-next" disabled onclick="nextStep()">
+                  <i class="ti ti-arrow-right"></i> Avançar para Vincular Aluno
+                </button>
+                <button class="btn-outline-scan" onclick="resetScanner()">Cancelar</button>
+              </div>
+            </div>
+
+            <!-- Step 2: Vincular -->
+            <div id="scanner-step-2" style="display:none;">
+              <div class="scanner-card">
+                <p style="font-size:0.88rem; color:var(--gray-400); margin-bottom:1.2rem;">Livro detectado. Informe a matrícula do aluno para vincular o empréstimo.</p>
+                <div class="form-group">
+                  <label class="form-label">Matrícula do Aluno</label>
+                  <input type="text" class="form-input" id="student-input" placeholder="RA123456" value="RA654321">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Prazo de Devolução</label>
+                  <input type="date" class="form-input" id="due-date-input">
+                </div>
+              </div>
+              <div class="scanner-btn-row">
+                <button class="btn-scan" onclick="confirmLoan()"><i class="ti ti-check"></i> Confirmar Empréstimo</button>
+                <button class="btn-outline-scan" onclick="goStep(1)">Voltar</button>
+              </div>
+            </div>
+
+            <!-- Step 3: Sucesso -->
+            <div id="scanner-step-3" style="display:none;">
+              <div class="scanner-card" style="text-align:center;">
+                <div style="width:72px;height:72px;background:var(--green-bg);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--green);margin:0 auto 1.2rem;">
+                  <i class="ti ti-check"></i>
+                </div>
+                <h3 style="font-family:var(--font-display);font-size:1.4rem;color:var(--slate);margin-bottom:0.5rem;">Empréstimo Registrado!</h3>
+                <p style="color:var(--gray-400);font-size:0.9rem;margin-bottom:1.5rem;">O livro foi vinculado com sucesso ao aluno.</p>
+                <div class="return-info show" style="justify-content:center;">
+                  <i class="ti ti-calendar-check"></i>
+                  <div>
+                    <h4 id="confirm-duedate">Devolução prevista para —</h4>
+                    <p>O aluno receberá um lembrete 2 dias antes do prazo.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="scanner-btn-row">
+                <button class="btn-scan" onclick="resetScanner()"><i class="ti ti-scan"></i> Novo Empréstimo</button>
+                <button class="btn-outline-scan" onclick="showView('emprestimos')">Ver Empréstimos</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── CATÁLOGO ── -->
+        <div class="view" id="view-catalogo">
+          <div class="page-header">
+            <h2>Catálogo de Livros</h2>
+            <p>Explore o acervo completo da biblioteca.</p>
+          </div>
+          <div class="catalog-toolbar">
+            <div class="catalog-search">
+              <i class="ti ti-search"></i>
+              <input type="text" placeholder="Buscar título, autor ou ISBN..." id="catalog-search" oninput="filterCatalog(this.value)">
+            </div>
+            <div class="filter-chips" id="filter-chips">
+              <div class="chip active" onclick="filterChip(this, '')">Todos</div>
+              <div class="chip" onclick="filterChip(this, 'Programação')">Programação</div>
+              <div class="chip" onclick="filterChip(this, 'Banco de Dados')">Banco de Dados</div>
+              <div class="chip" onclick="filterChip(this, 'Algoritmos')">Algoritmos</div>
+              <div class="chip" onclick="filterChip(this, 'Engenharia')">Engenharia</div>
+              <div class="chip" onclick="filterChip(this, 'Disponível')">Disponível</div>
+            </div>
+          </div>
+          <div class="books-grid" id="books-grid"></div>
+        </div>
+
+        <!-- ── MEUS EMPRÉSTIMOS ── -->
+        <div class="view" id="view-meus-emprestimos">
+          <div class="page-header">
+            <h2>Meus Empréstimos</h2>
+            <p>Histórico e situação atual dos seus empréstimos.</p>
+          </div>
+          <div class="loan-timeline">
+            <div class="loan-item">
+              <div class="loan-item-icon"><i class="ti ti-book"></i></div>
+              <div class="loan-item-body">
+                <h4>Algoritmos Modernos</h4>
+                <p>Autor: Thomas H. Cormen • Retirado em 01/05/2025</p>
+              </div>
+              <div class="loan-item-due overdue">
+                <div class="due-label">⚠ Em Atraso</div>
+                <div class="due-date">15/05/2025</div>
+              </div>
+            </div>
+            <div class="loan-item">
+              <div class="loan-item-icon" style="background:var(--green-bg);color:var(--green)"><i class="ti ti-book-2"></i></div>
+              <div class="loan-item-body">
+                <h4>Estrutura de Dados com Java</h4>
+                <p>Autor: Michael T. Goodrich • Retirado em 18/05/2025</p>
+              </div>
+              <div class="loan-item-due">
+                <div class="due-label">Devolução</div>
+                <div class="due-date">01/06/2025</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── RELATÓRIOS ── -->
+        <div class="view" id="view-relatorios">
+          <div class="page-header">
+            <h2>Relatórios</h2>
+            <p>Análises e estatísticas da biblioteca.</p>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;">
+            <div class="card" style="padding:1.5rem;">
+              <h3 style="font-family:var(--font-display);font-size:1.05rem;margin-bottom:1rem;">Empréstimos por Mês</h3>
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem;"><span style="width:60px;color:var(--gray-400)">Jan</span><div style="flex:1;height:10px;background:var(--gray-200);border-radius:5px;overflow:hidden;"><div style="width:70%;height:100%;background:var(--crimson);border-radius:5px;"></div></div><span>210</span></div>
+                <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem;"><span style="width:60px;color:var(--gray-400)">Fev</span><div style="flex:1;height:10px;background:var(--gray-200);border-radius:5px;overflow:hidden;"><div style="width:55%;height:100%;background:var(--crimson);border-radius:5px;"></div></div><span>165</span></div>
+                <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem;"><span style="width:60px;color:var(--gray-400)">Mar</span><div style="flex:1;height:10px;background:var(--gray-200);border-radius:5px;overflow:hidden;"><div style="width:90%;height:100%;background:var(--crimson);border-radius:5px;"></div></div><span>270</span></div>
+                <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem;"><span style="width:60px;color:var(--gray-400)">Abr</span><div style="flex:1;height:10px;background:var(--gray-200);border-radius:5px;overflow:hidden;"><div style="width:80%;height:100%;background:var(--crimson);border-radius:5px;"></div></div><span>240</span></div>
+                <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem;"><span style="width:60px;color:var(--gray-400)">Mai</span><div style="flex:1;height:10px;background:var(--gray-200);border-radius:5px;overflow:hidden;"><div style="width:60%;height:100%;background:var(--crimson);border-radius:5px;"></div></div><span>180</span></div>
+              </div>
+            </div>
+            <div class="card" style="padding:1.5rem;">
+              <h3 style="font-family:var(--font-display);font-size:1.05rem;margin-bottom:1rem;">Categorias Mais Emprestadas</h3>
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem;"><span style="width:90px;color:var(--gray-400)">Programação</span><div style="flex:1;height:10px;background:var(--gray-200);border-radius:5px;overflow:hidden;"><div style="width:85%;height:100%;background:#185FA5;border-radius:5px;"></div></div><span>34%</span></div>
+                <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem;"><span style="width:90px;color:var(--gray-400)">Algoritmos</span><div style="flex:1;height:10px;background:var(--gray-200);border-radius:5px;overflow:hidden;"><div style="width:60%;height:100%;background:#185FA5;border-radius:5px;"></div></div><span>24%</span></div>
+                <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem;"><span style="width:90px;color:var(--gray-400)">Banco de Dados</span><div style="flex:1;height:10px;background:var(--gray-200);border-radius:5px;overflow:hidden;"><div style="width:40%;height:100%;background:#185FA5;border-radius:5px;"></div></div><span>16%</span></div>
+                <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem;"><span style="width:90px;color:var(--gray-400)">Redes</span><div style="flex:1;height:10px;background:var(--gray-200);border-radius:5px;overflow:hidden;"><div style="width:25%;height:100%;background:#185FA5;border-radius:5px;"></div></div><span>10%</span></div>
+                <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem;"><span style="width:90px;color:var(--gray-400)">Outros</span><div style="flex:1;height:10px;background:var(--gray-200);border-radius:5px;overflow:hidden;"><div style="width:40%;height:100%;background:#185FA5;border-radius:5px;"></div></div><span>16%</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+</div>
+
+<!-- ── BOOK MODAL ── -->
+<div class="modal-overlay" id="modal-book">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()"><i class="ti ti-x"></i></button>
+    <div style="display:flex;gap:1.2rem;align-items:flex-start;margin-bottom:1.5rem;">
+      <div class="book-cover" id="modal-book-cover" style="width:72px;height:96px;border-radius:8px;font-size:32px;flex-shrink:0;"><i class="ti ti-book"></i></div>
+      <div>
+        <h3 id="modal-book-title" style="font-family:var(--font-display);font-size:1.3rem;"></h3>
+        <p id="modal-book-author" style="color:var(--gray-400);margin-top:4px;"></p>
+        <p id="modal-book-isbn" style="font-family:monospace;font-size:0.8rem;color:var(--gray-400);margin-top:2px;"></p>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.5rem;">
+      <div style="background:var(--gray-100);border-radius:var(--radius);padding:0.8rem 1rem;">
+        <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--gray-400);font-weight:600;">Categoria</div>
+        <div id="modal-cat" style="font-size:0.9rem;font-weight:500;margin-top:2px;"></div>
+      </div>
+      <div style="background:var(--gray-100);border-radius:var(--radius);padding:0.8rem 1rem;">
+        <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--gray-400);font-weight:600;">Disponibilidade</div>
+        <div id="modal-avail" style="font-size:0.9rem;font-weight:500;margin-top:2px;"></div>
+      </div>
+    </div>
+    <button class="btn-primary" onclick="bookAction()">
+      <span id="modal-action-label">Emprestar Livro via Scanner</span>
+    </button>
+  </div>
+</div>
+
+<!-- ── TOAST ── -->
+<div class="toast" id="toast">
+  <i class="ti ti-check" id="toast-icon"></i>
+  <span id="toast-msg">Operação realizada com sucesso!</span>
+</div>
+
+<script>
+const loans = [
+  { aluno:'Ana Luiza Pereira', livro:'Algoritmos Modernos', retirada:'01/05/2025', devolucao:'15/05/2025', status:'Atrasado' },
+  { aluno:'Carlos Eduardo Silva', livro:'Clean Code', retirada:'10/05/2025', devolucao:'24/05/2025', status:'Ativo' },
+  { aluno:'Rafael Mendes', livro:'Design Patterns', retirada:'28/04/2025', devolucao:'12/05/2025', status:'Atrasado' },
+  { aluno:'Fernanda Costa', livro:'Banco de Dados', retirada:'15/05/2025', devolucao:'29/05/2025', status:'Devolvido' },
+  { aluno:'Gustavo Almeida', livro:'Estrutura de Dados', retirada:'18/05/2025', devolucao:'01/06/2025', status:'Ativo' },
+  { aluno:'Beatriz Santos', livro:'Sistemas Operacionais', retirada:'10/04/2025', devolucao:'24/04/2025', status:'Atrasado' },
+];
+
+const books = [
+  { title:'Algoritmos: Teoria e Prática', author:'Thomas H. Cormen', isbn:'978-85-352-2249-4', category:'Algoritmos', available:false, color:'#8B1A1A', emoji:'📐' },
+  { title:'Clean Code', author:'Robert C. Martin', isbn:'978-85-508-0067-2', category:'Programação', available:true, color:'#1E2330', emoji:'🧹' },
+  { title:'Design Patterns', author:'Gang of Four', isbn:'978-0-201-63361-0', category:'Programação', available:false, color:'#185FA5', emoji:'🎨' },
+  { title:'Banco de Dados Relacionais', author:'C.J. Date', isbn:'978-85-352-1800-8', category:'Banco de Dados', available:true, color:'#0F6E56', emoji:'🗄' },
+  { title:'Estrutura de Dados e Algoritmos', author:'Michael T. Goodrich', isbn:'978-85-508-0001-6', category:'Algoritmos', available:true, color:'#993C1D', emoji:'🌳' },
+  { title:'Sistemas Operacionais Modernos', author:'Andrew Tanenbaum', isbn:'978-85-352-4105-1', category:'Engenharia', available:false, color:'#533AB7', emoji:'💻' },
+  { title:'Engenharia de Software', author:'Ian Sommerville', isbn:'978-85-88639-33-4', category:'Engenharia', available:true, color:'#63480B', emoji:'⚙' },
+  { title:'Redes de Computadores', author:'Andrew Tanenbaum', isbn:'978-85-352-2338-5', category:'Engenharia', available:true, color:'#185FA5', emoji:'🌐' },
+  { title:'Inteligência Artificial', author:'Stuart Russell', isbn:'978-85-352-4110-5', category:'Programação', available:false, color:'#8B1A1A', emoji:'🤖' },
+  { title:'JavaScript: O Guia Definitivo', author:'David Flanagan', isbn:'978-85-7780-171-7', category:'Programação', available:true, color:'#1E2330', emoji:'🟡' },
+  { title:'Python para Data Science', author:'Wes McKinney', isbn:'978-85-508-0080-1', category:'Programação', available:true, color:'#0F6E56', emoji:'🐍' },
+  { title:'Cálculo Diferencial e Integral', author:'James Stewart', isbn:'978-85-221-0591-3', category:'Engenharia', available:true, color:'#993C1D', emoji:'∫' },
+];
+
+const rfidBooks = [
+  { title:'Algoritmos Modernos', author:'Thomas H. Cormen', isbn:'978-85-352-2249-4', rfid:'RFID-A8F3C2E1' },
+  { title:'Padrões de Projeto', author:'Gang of Four', isbn:'978-0-201-63361-0', rfid:'RFID-B2D4F6A8' },
+  { title:'Banco de Dados Avançado', author:'C.J. Date', isbn:'978-85-352-1800-8', rfid:'RFID-C9E1A3B5' },
+];
+
+let scanState = 0, scannedBook = null, currentLoan = {};
+let allLoans = [...loans], filteredLoans = [...loans];
+let currentBookFilter = '', currentChip = '';
+
+function renderLoansTable(data, bodyId) {
+  const body = document.getElementById(bodyId);
+  if (!body) return;
+  body.innerHTML = data.map(l => `
+    <tr>
+      <td>${l.aluno}</td>
+      <td>${l.livro}</td>
+      <td>${l.retirada}</td>
+      <td>${l.devolucao}</td>
+      <td><span class="badge badge-${l.status.toLowerCase()}">${l.status}</span></td>
+      <td>
+        <div class="actions">
+          ${l.status !== 'Devolvido' ? `<button class="btn-action btn-devolver" onclick="returnBook('${l.livro}')">Devolver</button>` : ''}
+          <button class="btn-action btn-remover" onclick="removeRow(this)">Remover</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function returnBook(title) {
+  showToast('Livro "' + title + '" devolvido com sucesso!', 'success');
+}
+
+function removeRow(btn) {
+  btn.closest('tr').style.opacity = '0';
+  btn.closest('tr').style.transition = 'opacity 0.3s';
+  setTimeout(() => btn.closest('tr').remove(), 300);
+  showToast('Registro removido.', '');
+}
+
+function filterLoans(q) {
+  q = q.toLowerCase();
+  filteredLoans = allLoans.filter(l =>
+    l.aluno.toLowerCase().includes(q) || l.livro.toLowerCase().includes(q)
+  );
+  renderLoansTable(filteredLoans, 'loans-table-body-2');
+  document.getElementById('loans-count').textContent = `1–${filteredLoans.length} de ${filteredLoans.length} registros`;
+}
+
+function filterByStatus(val) {
+  filteredLoans = val ? allLoans.filter(l => l.status === val) : [...allLoans];
+  renderLoansTable(filteredLoans, 'loans-table-body-2');
+}
+
+function renderBooks(list) {
+  document.getElementById('books-grid').innerHTML = list.map((b, i) => `
+    <div class="book-card" onclick="openBook(${i})">
+      <div class="book-card-cover" style="background:${b.color}20;">
+        <span style="font-size:44px;">${b.emoji}</span>
+      </div>
+      <div class="book-card-body">
+        <div class="book-card-title">${b.title}</div>
+        <div class="book-card-author">${b.author}</div>
+        <div class="book-card-footer">
+          <span class="avail-badge ${b.available ? 'avail-yes':'avail-no'}">${b.available ? '● Disponível':'● Indisponível'}</span>
+          <span class="book-card-category"><i class="ti ti-tag" style="font-size:11px;"></i> ${b.category}</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+let openBookIdx = -1;
+function openBook(i) {
+  const booksFiltered = getFilteredBooks();
+  const b = booksFiltered[i];
+  openBookIdx = i;
+  document.getElementById('modal-book-title').textContent = b.title;
+  document.getElementById('modal-book-author').textContent = b.author;
+  document.getElementById('modal-book-isbn').textContent = 'ISBN: ' + b.isbn;
+  document.getElementById('modal-book-cover').style.background = b.color;
+  document.getElementById('modal-book-cover').innerHTML = `<span style="font-size:32px">${b.emoji}</span>`;
+  document.getElementById('modal-cat').textContent = b.category;
+  document.getElementById('modal-avail').innerHTML = b.available
+    ? '<span style="color:var(--green)">● Disponível</span>'
+    : '<span style="color:var(--crimson)">● Indisponível</span>';
+  document.getElementById('modal-action-label').textContent = b.available
+    ? 'Emprestar via Scanner RFID' : 'Entrar na Lista de Espera';
+  document.getElementById('modal-book').classList.add('open');
+}
+
+function getFilteredBooks() {
+  return books.filter(b => {
+    const q = currentBookFilter.toLowerCase();
+    const matchQ = !q || b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q);
+    const matchChip = !currentChip || b.category === currentChip || (currentChip === 'Disponível' && b.available);
+    return matchQ && matchChip;
+  });
+}
+
+function bookAction() {
+  closeModal();
+  showView('scanner');
+  showToast('Scanner ativado para o livro selecionado!', 'success');
+}
+
+function closeModal() {
+  document.getElementById('modal-book').classList.remove('open');
+}
+
+function filterCatalog(q) {
+  currentBookFilter = q;
+  renderBooks(getFilteredBooks());
+}
+
+function filterChip(el, cat) {
+  currentChip = cat;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderBooks(getFilteredBooks());
+}
+
+function showView(view) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const v = document.getElementById('view-' + view);
+  const n = document.getElementById('nav-' + view);
+  if (v) v.classList.add('active');
+  if (n) n.classList.add('active');
+}
+
+// ── SCANNER ──
+function startScan() {
+  if (scanState !== 0) return;
+  const area = document.getElementById('scanner-area');
+  const icon = document.getElementById('scanner-icon');
+  const text = document.getElementById('scanner-text');
+  const hint = document.getElementById('scanner-hint');
+  area.classList.add('scanning');
+  icon.className = 'ti ti-loader scanner-icon loading-dot';
+  text.textContent = 'Aguardando chip RFID…';
+  hint.textContent = '';
+  scanState = 1;
+  setTimeout(() => {
+    scannedBook = rfidBooks[Math.floor(Math.random() * rfidBooks.length)];
+    area.classList.remove('scanning');
+    area.classList.add('success');
+    icon.className = 'ti ti-check scanner-icon';
+    text.textContent = 'Chip detectado!';
+    hint.textContent = '';
+    document.getElementById('book-result-title').textContent = scannedBook.title;
+    document.getElementById('book-result-author').textContent = scannedBook.author;
+    document.getElementById('book-result-isbn').textContent = scannedBook.isbn;
+    document.getElementById('book-rfid').textContent = scannedBook.rfid;
+    document.getElementById('book-result').classList.add('show');
+    document.getElementById('btn-step1-next').disabled = false;
+    scanState = 2;
+  }, 2200);
+}
+
+function nextStep() {
+  const d = new Date();
+  d.setDate(d.getDate() + 14);
+  document.getElementById('due-date-input').value = d.toISOString().split('T')[0];
+  goStep(2);
+}
+
+function goStep(n) {
+  document.getElementById('scanner-step-1').style.display = n === 1 ? '' : 'none';
+  document.getElementById('scanner-step-2').style.display = n === 2 ? '' : 'none';
+  document.getElementById('scanner-step-3').style.display = n === 3 ? '' : 'none';
+  document.querySelectorAll('.step').forEach((s, i) => {
+    s.classList.remove('active', 'done');
+    if (i + 1 < n) s.classList.add('done');
+    if (i + 1 === n) s.classList.add('active');
+  });
+}
+
+function confirmLoan() {
+  const ra = document.getElementById('student-input').value || 'RA654321';
+  const due = document.getElementById('due-date-input').value;
+  const parts = due.split('-');
+  const formatted = parts[2] + '/' + parts[1] + '/' + parts[0];
+  document.getElementById('confirm-duedate').textContent = `Devolução prevista para ${formatted}`;
+  goStep(3);
+
+  const today = new Date();
+  allLoans.unshift({
+    aluno: ra,
+    livro: scannedBook.title,
+    retirada: today.toLocaleDateString('pt-BR'),
+    devolucao: formatted,
+    status: 'Ativo'
+  });
+  filteredLoans = [...allLoans];
+  renderLoansTable(filteredLoans.slice(0,6), 'loans-table-body');
+  renderLoansTable(filteredLoans, 'loans-table-body-2');
+  showToast('Empréstimo registrado com sucesso!', 'success');
+}
+
+function resetScanner() {
+  scanState = 0; scannedBook = null;
+  const area = document.getElementById('scanner-area');
+  area.className = 'scanner-area';
+  document.getElementById('scanner-icon').className = 'ti ti-scan scanner-icon';
+  document.getElementById('scanner-text').textContent = 'Clique para ativar o scanner RFID';
+  document.getElementById('scanner-hint').textContent = 'ou aproxime o livro do leitor';
+  document.getElementById('book-result').classList.remove('show');
+  document.getElementById('btn-step1-next').disabled = true;
+  goStep(1);
+}
+
+function globalSearch(q) {
+  if (!q) return;
+  showView('catalogo');
+  document.getElementById('catalog-search').value = q;
+  filterCatalog(q);
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  const icon = document.getElementById('toast-icon');
+  t.className = 'toast' + (type ? ' ' + type : '');
+  document.getElementById('toast-msg').textContent = msg;
+  icon.className = type === 'success' ? 'ti ti-check' : 'ti ti-info-circle';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function doLogin() {
+  document.getElementById('screen-login').classList.remove('active');
+  document.getElementById('screen-app').classList.add('active');
+  init();
+}
+
+function doLogout() {
+  document.getElementById('screen-app').classList.remove('active');
+  document.getElementById('screen-login').classList.add('active');
+}
+
+function init() {
+  const today = new Date();
+  document.getElementById('today-date').textContent = today.toLocaleDateString('pt-BR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  renderLoansTable(allLoans.slice(0, 6), 'loans-table-body');
+  renderLoansTable(allLoans, 'loans-table-body-2');
+  renderBooks(books);
+}
+</script>
+</body>
+</html>
